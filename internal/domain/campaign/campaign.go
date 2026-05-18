@@ -14,14 +14,14 @@ type Campaign struct {
 	Contacts  []Contact
 }
 
-func NewCampaign(name, content string, emails []Contact) Campaign {
+func NewCampaign(name, content string, emails []string) Campaign {
 	contacts := make([]Contact, len(emails))
 	for i, email := range emails {
-		contacts[i] = Contact{Email: email.Email}
+		contacts[i] = Contact{Email: email}
 	}
 
 	return Campaign{
-		ID:        "1",
+		ID:        "2",
 		Name:      name,
 		CreatedOn: time.Now(),
 		Content:   content,
