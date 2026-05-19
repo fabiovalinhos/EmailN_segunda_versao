@@ -7,10 +7,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var (
+	name    = "Test Campaign"
+	content = "This is a test campaign."
+	emails  = []string{"email@example.com", "another@example.com"}
+)
+
 func Test_NewCampaign_CreateCampaign(t *testing.T) {
-	name := "Test Campaign"
-	content := "This is a test campaign."
-	emails := []string{"email@example.com", "another@example.com"}
 	assert := assert.New(t)
 
 	campaign := NewCampaign(name, content, emails)
@@ -39,9 +42,6 @@ func Test_NewCampaign_CreateCampaign(t *testing.T) {
 }
 
 func Test_NewCampaign_IDIsNotNil(t *testing.T) {
-	name := "Test Campaign"
-	content := "This is a test campaign."
-	emails := []string{"email@example.com", "another@example.com"}
 	assert := assert.New(t)
 
 	campaign := NewCampaign(name, content, emails)
@@ -49,12 +49,9 @@ func Test_NewCampaign_IDIsNotNil(t *testing.T) {
 	assert.NotNil(campaign.ID, "Expected ID to be not nil")
 }
 
-func Test_NewCampaign_CreatedOnIsNotNil(t *testing.T) {
-	name := "Test Campaign"
-	content := "This is a test campaign."
-	emails := []string{"email@example.com", "another@example.com"}
+func Test_NewCampaign_CreatedOnMustBeNow(t *testing.T) {
 	assert := assert.New(t)
-	now := time.Now().Add(-time.Minute) // Considera um tempo um pouco antes para evitar falhas devido a diferenças de tempo
+	now := time.Now().Add(-time.Minute)
 
 	campaign := NewCampaign(name, content, emails)
 
