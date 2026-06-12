@@ -4,6 +4,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/jaswdr/faker/v2"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -11,6 +12,8 @@ var (
 	name    = "Test Campaign"
 	content = "This is a test campaign."
 	emails  = []string{"email@example.com", "another@example.com"}
+
+	fake = faker.New()
 )
 
 func Test_NewCampaign_CreateCampaign(t *testing.T) {
@@ -57,24 +60,50 @@ func Test_NewCampaign_CreatedOnMustBeNow(t *testing.T) {
 
 	assert.Greater(campaign.CreatedOn, now)
 }
-func Test_NewCampaign_MustValidateName(t *testing.T) {
+func Test_NewCampaign_MustValidateNameMin(t *testing.T) {
 	assert := assert.New(t)
 
 	_, err := NewCampaign("", content, emails)
 
-	assert.Equal("name is required", err.Error())
+	assert.Equal("name is required with min 5", err.Error())
 }
-func Test_NewCampaign_MustValidateContent(t *testing.T) {
+
+func Test_NewCampaign_MustValidateNameMax(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := NewCampaign(fake.Lorem().Text(30), content, emails)
+
+	assert.Equal("name is required with max 24", err.Error())
+}
+
+func Test_NewCampaign_MustValidateContentMin(t *testing.T) {
 	assert := assert.New(t)
 
 	_, err := NewCampaign(name, "", emails)
 
-	assert.Equal("content is required", err.Error())
+	assert.Equal("content is required with min 5", err.Error())
 }
-func Test_NewCampaign_MustValidateContacts(t *testing.T) {
+
+func Test_NewCampaign_MustValidateContentMax(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := NewCampaign(name, fake.Lorem().Text(1200), emails)
+
+	assert.Equal("content is required with max 1024", err.Error())
+}
+
+func Test_NewCampaign_MustValidateContactsMin(t *testing.T) {
 	assert := assert.New(t)
 
 	_, err := NewCampaign(name, content, []string{})
 
-	assert.Equal("contacts are required", err.Error())
+	assert.Equal("contacts is required with min 1", err.Error())
+}
+
+func Test_NewCampaign_MustValidateContacts(t *testing.T) {
+	assert := assert.New(t)
+
+	_, err := NewCampaign(name, content, []string{"email"})
+
+	assert.Equal("email is invalid", err.Error())
 }
